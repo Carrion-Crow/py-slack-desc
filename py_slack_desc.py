@@ -1,7 +1,24 @@
 #!/usr/bin/env python3
 """ py_slack_desc - a simple script to generate Slackware's Slack-desc """
 import textwrap as tw
+import argparse
 
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-c", "--comandline", default=False,
+                    help="run script in comandline mode",
+                    action="store_true")
+
+cmd_parser = parser.add_argument_group('comandline mode')
+cmd_parser.add_argument("-n", "--name", help="program name")
+cmd_parser.add_argument("-s", "--short", nargs='+',
+                        help="program short description (one line)")
+cmd_parser.add_argument("-d", "--description", nargs='+',
+                        help="program description")
+cmd_parser.add_argument("-u", "--url",
+                        help="program homepage URL")
+
+args = parser.parse_args()
 
 def get_pkg_name():
     """ Ask user for package name """

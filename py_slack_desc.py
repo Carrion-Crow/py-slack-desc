@@ -124,6 +124,35 @@ def write_slack_desc(slack_desc):
             slack_desc_file.write(line + '\n')
 
 
+def comandline():
+    """ Put everything together """
+    # Get package name
+    pkg_name = args.name
+    pkg_prefix = pkg_name + ': '
+    pkg_empty_line = pkg_prefix[:-1]
+
+    # Get handy ruler
+    pkg_handy_ruler = get_pkg_handy_ruler(pkg_name)
+
+    # Get short description
+    pkg_short_desc = pkg_prefix + ' '.join(args.short)
+
+    # Get package description
+    pkg_desc = ' '.join(args.description)
+    pkg_desc = pkg_desc_warp(pkg_prefix, pkg_desc, pkg_empty_line)
+
+    # Get package URL
+    pkg_url = args.url
+    pkg_url = pkg_prefix + pkg_url
+
+    # Construct Slack-desc
+    slack_desc = slack_desc_constructor(pkg_handy_ruler, pkg_short_desc,
+                                        pkg_desc, pkg_url, pkg_empty_line)
+
+    # Write Slack-desc file
+    write_slack_desc(slack_desc)
+
+
 def interactive():
     """ Put everything together """
     # Get package name
@@ -155,6 +184,6 @@ def interactive():
 
 if __name__ == "__main__":
     if args.comandline:
-        pass
+        comandline()
     else:
         interactive()

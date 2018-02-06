@@ -20,6 +20,7 @@ cmd_parser.add_argument("-u", "--url",
 
 args = parser.parse_args()
 
+
 def get_pkg_name():
     """ Ask user for package name """
     pkg_name = input("package name (no spaces): ")

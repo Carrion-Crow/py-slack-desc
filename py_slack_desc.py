@@ -3,20 +3,20 @@
 import textwrap as tw
 import argparse
 
+
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-c", "--comandline", default=False,
                     help="run script in comandline mode",
                     action="store_true")
 cmd_parser = parser.add_argument_group('comandline mode')
-cmd_parser.add_argument("-n", "--name", help="program name")
+cmd_parser.add_argument("-n", "--name", nargs=1, help="program name")
 cmd_parser.add_argument("-s", "--short", nargs='+',
                         help="program short description (one line)")
 cmd_parser.add_argument("-d", "--description", nargs='+',
                         help="program description")
-cmd_parser.add_argument("-u", "--url",
+cmd_parser.add_argument("-u", "--url", nargs=1,
                         help="program homepage URL")
-
 args = parser.parse_args()
 
 

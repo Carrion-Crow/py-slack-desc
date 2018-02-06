@@ -1,2 +1,2 @@
 # py-slack-desc
-py-slack-desc - tool for generating slack-desc
+py_slack_desc - a simple script to generate Slackware's Slack-desc

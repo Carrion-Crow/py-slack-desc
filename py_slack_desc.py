@@ -8,7 +8,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--comandline", default=False,
                     help="run script in comandline mode",
                     action="store_true")
-
 cmd_parser = parser.add_argument_group('comandline mode')
 cmd_parser.add_argument("-n", "--name", help="program name")
 cmd_parser.add_argument("-s", "--short", nargs='+',
@@ -125,7 +124,7 @@ def write_slack_desc(slack_desc):
             slack_desc_file.write(line + '\n')
 
 
-def main():
+def interactive():
     """ Put everything together """
     # Get package name
     pkg_name = get_pkg_name()
@@ -155,4 +154,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if args.comandline:
+        pass
+    else:
+        interactive()

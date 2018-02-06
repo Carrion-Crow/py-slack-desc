@@ -126,7 +126,7 @@ def write_slack_desc(slack_desc):
 def comandline():
     """ Put everything together """
     # Get package name
-    pkg_name = args.name
+    pkg_name = ''.join(args.name)
     pkg_prefix = pkg_name + ': '
     pkg_empty_line = pkg_prefix[:-1]
 
@@ -141,7 +141,7 @@ def comandline():
     pkg_desc = pkg_desc_warp(pkg_prefix, pkg_desc, pkg_empty_line)
 
     # Get package URL
-    pkg_url = args.url
+    pkg_url = ''.join(args.url)
     pkg_url = pkg_prefix + pkg_url
 
     # Construct Slack-desc

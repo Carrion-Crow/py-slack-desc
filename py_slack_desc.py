@@ -3,7 +3,6 @@
 import textwrap as tw
 import argparse
 
-
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-c", "--comandline", default=False,

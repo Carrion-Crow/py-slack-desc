@@ -1,6 +1,22 @@
 #!/usr/bin/env python3
 """ py_slack_desc - a simple script to generate Slackware's Slack-desc """
 import textwrap as tw
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-c", "--comandline", default=False,
+                    help="run script in comandline mode",
+                    action="store_true")
+cmd_parser = parser.add_argument_group('comandline mode')
+cmd_parser.add_argument("-n", "--name", nargs=1, help="program name")
+cmd_parser.add_argument("-s", "--short", nargs='+',
+                        help="program short description (one line)")
+cmd_parser.add_argument("-d", "--description", nargs='+',
+                        help="program description")
+cmd_parser.add_argument("-u", "--url", nargs=1,
+                        help="program homepage URL")
+args = parser.parse_args()
 
 
 def get_pkg_name():
@@ -107,7 +123,36 @@ def write_slack_desc(slack_desc):
             slack_desc_file.write(line + '\n')
 
 
-def main():
+def comandline():
+    """ Put everything together """
+    # Get package name
+    pkg_name = args.name
+    pkg_prefix = pkg_name + ': '
+    pkg_empty_line = pkg_prefix[:-1]
+
+    # Get handy ruler
+    pkg_handy_ruler = get_pkg_handy_ruler(pkg_name)
+
+    # Get short description
+    pkg_short_desc = pkg_prefix + ' '.join(args.short)
+
+    # Get package description
+    pkg_desc = ' '.join(args.description)
+    pkg_desc = pkg_desc_warp(pkg_prefix, pkg_desc, pkg_empty_line)
+
+    # Get package URL
+    pkg_url = args.url
+    pkg_url = pkg_prefix + pkg_url
+
+    # Construct Slack-desc
+    slack_desc = slack_desc_constructor(pkg_handy_ruler, pkg_short_desc,
+                                        pkg_desc, pkg_url, pkg_empty_line)
+
+    # Write Slack-desc file
+    write_slack_desc(slack_desc)
+
+
+def interactive():
     """ Put everything together """
     # Get package name
     pkg_name = get_pkg_name()
@@ -137,4 +182,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if args.comandline:
+        comandline()
+    else:
+        interactive()

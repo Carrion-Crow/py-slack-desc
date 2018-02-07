@@ -160,7 +160,9 @@ def handy_ruler(pkg_name):
     ruler_extender = (79 - len(ruler_intend + ruler_start) - 1) * '-'
     ruler_end = '|'
     handy_ruler = ruler_intend + ruler_start + ruler_extender + ruler_end
-    return handy_ruler.split()
+    # .split removes whitespaces
+    handy_ruler = [handy_ruler]
+    return handy_ruler
 
 
 def arguments():

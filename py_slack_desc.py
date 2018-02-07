@@ -1,100 +1,136 @@
-#!/usr/bin/env python3
-""" py_slack_desc - a simple script to generate Slackware's Slack-desc """
-import textwrap as tw
 import argparse
-
-parser = argparse.ArgumentParser()
-
-parser.add_argument("-c", "--comandline", default=False,
-                    help="run script in comandline mode",
-                    action="store_true")
-cmd_parser = parser.add_argument_group('comandline mode')
-cmd_parser.add_argument("-n", "--name", nargs=1, help="program name")
-cmd_parser.add_argument("-s", "--short", nargs='+',
-                        help="program short description (one line)")
-cmd_parser.add_argument("-d", "--description", nargs='+',
-                        help="program description")
-cmd_parser.add_argument("-u", "--url", nargs=1,
-                        help="program homepage URL")
-args = parser.parse_args()
+import os
+import sys
+import textwrap
 
 
-def get_pkg_name():
-    """ Ask user for package name """
-    pkg_name = input("package name (no spaces): ")
-    if not pkg_name:
-        print("Package name can't be empty. Try again.")
-        return get_pkg_name()
-    elif ' ' in pkg_name:
-        print('Spaces are not allowed in package name. Use "-" instead. Try again.')
-        return get_pkg_name()
-    return pkg_name
+def text_warpper(text, prefix, separator):
+    """Wraps text
+
+    Parameters:
+    ----------
+    text : {str}
+        Text to be warped
+    prefix : {str}
+        Defines a name of the program to be used as a prefix for every line of text
+    separator : {str}
+        Defines the text inserted between prefix and text
+    Returns
+    -------
+    list
+        Returns a list of strings (lines)
+    """
+
+    pkg_prefix = prefix + separator
+    # empty lines need a special care
+    if text != '':
+        max_line_width = (79 - len(pkg_prefix))
+        text_warpper = textwrap.TextWrapper(
+            width=max_line_width,
+            initial_indent=pkg_prefix,
+            subsequent_indent=pkg_prefix)
+        warped_text = textwrap.dedent(text)
+        warped_text = text_warpper.wrap(warped_text)
+        return warped_text
+    else:
+        # single line doesn't need trailing spaces
+        warped_text = pkg_prefix.rstrip()
+        # ensure to always return list, not string
+        return warped_text.split()
 
 
-def get_pkg_handy_ruler(pkg_name):
-    """ Get a handy ruler """
-    ruler_intend = len(pkg_name) * ' '
-    ruler_start = '|-----handy-ruler'  # 17 chars
-    ruler_extender = (79 - len(ruler_intend + ruler_start) - 1) * '-'
-    ruler_end = '|'
-    handy_ruler = ruler_intend + ruler_start + ruler_extender + ruler_end
-    return handy_ruler
+def text_validator(text, one_word=False, one_line=False, six_lines=False, pkg_name=None):
+    """Validates the text that makes up the slack-desc file
+
+    Parameters:
+    ----------
+    text : {str}
+        Text for validation
+    one_word : {bool}, optional
+        Defines if text has to be a single word (the default is False)
+    one_line : {bool}, optional
+        Defines if text has to be maximally six line long (the default is False)
+    six_lines : {bool}, optional
+        Defines if text has to be maximally six lines long  (the default is False)
+    pkg_name : {str}, optional
+        Defines name of program (the default is None)
+
+    Raises
+    ------
+    ValueError
+        Raisers ValueError if text doesn't pass validation
+
+    Returns
+    -------
+    bool
+        True if text passes validation. Otherwise raises an error.
+    """
+
+    if not text:
+        raise ValueError("Error: Input can't be empty. Try again.")
+    elif one_word:
+        if (' ' in text):
+            raise ValueError("Error: Use one word. Try again.")
+        elif (len(text) > 77):
+            raise ValueError("Error: Text is too long. Try again.")
+    elif one_line:
+        if not pkg_name:
+            sys.exit("Error: unknown program name.")
+        elif (len(pkg_name + text) + 2) > 79:
+            raise ValueError(
+                "Error: Package short description is too long. Try again.")
+    elif six_lines:
+        if not pkg_name:
+            sys.exit("Error: Unknown program name.")
+        elif len(text_warpper(text, pkg_name, ': ')) > 6:
+            raise ValueError(
+                "Error: Package description is too long. Try again.")
+    else:
+        return True
 
 
-def get_pkg_short_desc(pkg_prefix):
-    """ Ask user for package short description """
-    pkg_short_desc = input("Package short description (one line) ")
-    if not pkg_short_desc:
-        print("Package short description can't be empty. Try again.")
-        return get_pkg_short_desc(pkg_prefix)
-    elif len(pkg_prefix + pkg_short_desc) > 79:
-        print("Package short description is too long. Try again.")
-        return get_pkg_short_desc(pkg_prefix)
-    pkg_short_desc = pkg_prefix + pkg_short_desc
-    return pkg_short_desc
+def user_input(question, one_word=False, one_line=False, six_lines=False, pkg_name=None):
+    """Asks user for input and pass it to validator
+
+    Parameters:
+    ----------
+    question : {str}
+        Content of the question asked to the user
+    one_word : {bool}, optional
+        Passed to the validator, defines if user input has to be a single word (the default is False)
+    one_line : {bool}, optional
+        Passed to the validator, defines if user input has to be maximally six line long (the default is False)
+    six_lines : {bool}, optional
+        Passed to the validator, defines if user input has to be maximally six lines long  (the default is False)
+    pkg_name : {str}, optional
+        Passed to the validator, defines name of a program (the default is None)
+
+    Returns
+    -------
+    str
+        Returns correct user input
+    """
+
+    var_name = input(question)
+
+    try:
+        text_validator(var_name, one_word, one_line, six_lines, pkg_name)
+    except ValueError as error:
+        print(error)
+        return user_input(question, one_word, one_line, six_lines, pkg_name)
+    else:
+        return var_name
 
 
-def get_pkg_desc():
-    """ Ask user for package description """
-    pkg_desc = input("Package description: ")
-    if not pkg_desc:
-        print("Package name can't be empty. Try again.")
-        return get_pkg_desc()
-    return pkg_desc
+def header():
+    """Header of slack-build file
 
+    Returns
+    -------
+    list
+        Returns a list of lines
+    """
 
-def get_pkg_url(pkg_prefix):
-    """ Ask user for package homepage """
-    pkg_url = input("Package homepage: ")
-    if len(pkg_prefix + pkg_url) > 79:
-        print("URL is too long. Try again.")
-        return get_pkg_url(pkg_prefix)
-    return pkg_url
-
-
-def pkg_desc_warp(pkg_prefix, pkg_desc, pkg_empty_line):
-    """ Wrap 'pkg_desc' and ident it with 'pkg_prefix: ' """
-    desc_width = (79 - len(pkg_prefix))
-    desc_warpper = tw.TextWrapper(
-        width=desc_width,
-        initial_indent=pkg_prefix,
-        subsequent_indent=pkg_prefix)
-
-    pkg_desc = tw.dedent(pkg_desc)
-    pkg_desc = desc_warpper.wrap(pkg_desc)
-
-    if len(pkg_desc) > 6:
-        print("Package description is to long. Try again.")
-        return pkg_desc_warp(pkg_prefix, get_pkg_desc(), pkg_empty_line)
-    elif len(pkg_desc) < 6:
-        for _ in range(6 - len(pkg_desc)):
-            pkg_desc.append(pkg_empty_line)
-    return pkg_desc
-
-
-def slack_desc_constructor(pkg_handy_ruler, pkg_short_desc, pkg_desc,
-                           pkg_url, pkg_empty_line):
-    """ Build Slack-desc as a list of lines """
     header = [
         "# HOW TO EDIT THIS FILE:",
         '# The "handy ruler" below makes it easier to edit a package description.  Line',
@@ -102,87 +138,139 @@ def slack_desc_constructor(pkg_handy_ruler, pkg_short_desc, pkg_desc,
         '# on the right side marks the last column you can put a character in.  You must',
         "# make exactly 11 lines for the formatting to be correct.  It's also",
         "# customary to leave one space after the ':'.",
-        ''
-    ]
-    pkg_slack_desc = []
-    pkg_slack_desc.extend(header)
-    pkg_slack_desc.append(pkg_handy_ruler)
-    pkg_slack_desc.append(pkg_short_desc)
-    pkg_slack_desc.append(pkg_empty_line)
-    pkg_slack_desc.extend(pkg_desc)
-    pkg_slack_desc.append(pkg_empty_line)
-    pkg_slack_desc.append(pkg_url)
-    pkg_slack_desc.append(pkg_empty_line)
-    return pkg_slack_desc
+        '']
+    return header
 
 
-def write_slack_desc(slack_desc):
-    """ Finally write file to current directory """
-    with open('slack-desc', mode='w') as slack_desc_file:
-        for line in slack_desc:
-            slack_desc_file.write(line + '\n')
+def handy_ruler(pkg_name):
+    """Creates a handy ruler
+
+    Parameters:
+    ----------
+    pkg_name : {str}
+        Name
+    Returns
+    -------
+    [type]
+        Defines name of a program
+    """
+
+    ruler_intend = len(pkg_name) * ' '
+    ruler_start = '|-----handy-ruler'  # 17 chars
+    ruler_extender = (79 - len(ruler_intend + ruler_start) - 1) * '-'
+    ruler_end = '|'
+    handy_ruler = ruler_intend + ruler_start + ruler_extender + ruler_end
+    return handy_ruler.split()
 
 
-def comandline():
-    """ Put everything together """
-    # Get package name
-    pkg_name = ''.join(args.name)
-    pkg_prefix = pkg_name + ': '
-    pkg_empty_line = pkg_prefix[:-1]
+def arguments():
+    parser = argparse.ArgumentParser()
 
-    # Get handy ruler
-    pkg_handy_ruler = get_pkg_handy_ruler(pkg_name)
-
-    # Get short description
-    pkg_short_desc = pkg_prefix + ' '.join(args.short)
-
-    # Get package description
-    pkg_desc = ' '.join(args.description)
-    pkg_desc = pkg_desc_warp(pkg_prefix, pkg_desc, pkg_empty_line)
-
-    # Get package URL
-    pkg_url = ''.join(args.url)
-    pkg_url = pkg_prefix + pkg_url
-
-    # Construct Slack-desc
-    slack_desc = slack_desc_constructor(pkg_handy_ruler, pkg_short_desc,
-                                        pkg_desc, pkg_url, pkg_empty_line)
-
-    # Write Slack-desc file
-    write_slack_desc(slack_desc)
+    parser.add_argument("-i", "--interactive", default=False,
+                        help="run script in interactive mode",
+                        action="store_true")
+    parser.add_argument("-o", "--output", help="output directory")
+    cmd_parser = parser.add_argument_group('commandline mode')
+    cmd_parser.add_argument("-n", "--name", nargs=1, help="program name")
+    cmd_parser.add_argument("-s", "--short", nargs='+',
+                            help="program short description (one line)")
+    cmd_parser.add_argument("-d", "--description", nargs='+',
+                            help="program description")
+    cmd_parser.add_argument("-u", "--url", nargs=1,
+                            help="program homepage URL")
+    args = parser.parse_args()
+    return args
 
 
-def interactive():
-    """ Put everything together """
-    # Get package name
-    pkg_name = get_pkg_name()
-    pkg_prefix = pkg_name + ': '
-    pkg_empty_line = pkg_prefix[:-1]
+def program_dict(cli_mode, args):
+    """Populate a dictionary with all lines of slack-desc file
 
-    # Get handy ruler
-    pkg_handy_ruler = get_pkg_handy_ruler(pkg_name)
+    Parameters:
+    ----------
+    cli_mode : {bool}
+        Dictionary populating mode.
+    args : {argparse.Namespace}
+        Argparse Namespace
+    Returns
+    -------
+    dict
+        Returns a dictionary with all lines of slack-desc file
+    """
 
-    # Get short description
-    pkg_short_desc = get_pkg_short_desc(pkg_prefix)
-
-    # Get package description
-    pkg_desc = get_pkg_desc()
-    pkg_desc = pkg_desc_warp(pkg_prefix, pkg_desc, pkg_empty_line)
-
-    # Get package URL
-    pkg_url = get_pkg_url(pkg_prefix)
-    pkg_url = pkg_prefix + pkg_url
-
-    # Construct Slack-desc
-    slack_desc = slack_desc_constructor(pkg_handy_ruler, pkg_short_desc,
-                                        pkg_desc, pkg_url, pkg_empty_line)
-
-    # Write Slack-desc file
-    write_slack_desc(slack_desc)
-
-
-if __name__ == "__main__":
-    if args.comandline:
-        comandline()
+    program = dict()
+    # check mode
+    if cli_mode:
+        # commandline mode (default)
+        program['name'] = text_validator(args.name)
+        program['short_desc'] = text_validator(
+            args.short, one_line=True, pkg_name=program['name'])
+        program['desc'] = text_validator(
+            args.description, six_lines=True, pkg_name=program['name'])
+        program['url'] = text_validator(
+            args.url, one_word=True, one_line=True, pkg_name=program['name'])
     else:
-        interactive()
+        # interactive mode
+        program['name'] = user_input(
+            'Program name (single word): ', one_word=True)
+        program['short_desc'] = user_input(
+            'Short description (one line): ', one_line=True, pkg_name=program['name'])
+        program['desc'] = user_input(
+            'Description (up to six lines): ', six_lines=True, pkg_name=program['name'])
+        program['url'] = user_input(
+            'Program homepage URL: ', one_word=True, one_line=True, pkg_name=program['name'])
+    # common part
+    program['header'] = header()
+    program['ruler'] = handy_ruler(program['name'])
+    program['empty'] = ''
+
+    # warping text
+    for key in ('short_desc', 'desc', 'url', 'empty'):
+        program[key] = text_warpper(program[key], program['name'], ': ')
+
+    return program
+
+
+def write_file(file_path, dictionary):
+    file_path = os.path.join(file_path, 'slack-desc')
+
+    dict_list = list()
+    dict_list.extend(dictionary['header'])
+    dict_list.extend(dictionary['ruler'])
+    dict_list.extend(dictionary['short_desc'])
+    dict_list.extend(dictionary['empty'])
+    dict_list.extend(dictionary['desc'])
+    # add some empty lines to get total of 11
+    if len(dictionary['desc']) < 6:
+        for _ in range(6 - len(dictionary['desc'])):
+            dict_list.extend(dictionary['empty'])
+    dict_list.extend(dictionary['empty'])
+    dict_list.extend(dictionary['url'])
+    dict_list.extend(dictionary['empty'])
+
+    with open(file_path, mode='w') as slack_desc:
+        for line in dict_list:
+            slack_desc.write(line + '\n')
+
+
+def main():
+    args = arguments()
+
+    if (len(sys.argv) == 1) or args.interactive:
+        cli_mode = False
+
+    program = program_dict(cli_mode, args)
+
+    print(program['ruler'])
+
+    if args.output:
+        file_path = os.path.expandvars(args.output)
+        file_path = os.path.expanduser(file_path)
+        file_path = os.path.abspath(file_path)
+    else:
+        file_path = ''
+
+    write_file(file_path, program)
+
+
+if __name__ == '__main__':
+    main()

@@ -194,6 +194,20 @@ def handy_ruler(pkg_name):
 
 
 def valid_path(path, file_name='', override=False):
+    """Validates file path. Asks if file exist
+
+    Parameters:
+    ----------
+    path : {str}
+        Path to the output file
+    file_name : {str}, optional
+        Name of the output file
+    override : {bool}, optional
+        If true output file will be overridded without asking.
+        (the default is False, which mean ask about overridding)
+
+    """
+
     # TODO: need some work
     file_path = os.path.join(path, file_name)
     file_path = os.path.expandvars(file_path)

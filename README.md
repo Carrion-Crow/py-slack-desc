@@ -1,7 +1,28 @@
-# py-slack-desc
-### py_slack_desc - a simple, interactive script to generate [Slackware](http://www.slackware.com)'s [Slack-descs](https://www.slackwiki.com/Slack-desc). Useful if you write [SlackBuilds](https://www.slackwiki.com/Writing_A_SlackBuild_Script).
+# pyslackdesc
 
-### Usage:
-`python3 /path/to/py_slack_desc.py` or just `/path/to/py_slack_desc.py` 
+## pyslackdesc - simple, interactive script to generate [Slackware](http://www.slackware.com)'s [Slack-desc](https://www.slackwiki.com/Slack-desc) files. Useful if you write [SlackBuilds](https://www.slackwiki.com/Writing_A_SlackBuild_Script)
+
+### Usage
+
+```python
+usage: pyslackdesc [-h] [-i] [-o filename] [-V] [-n name]
+                   [-s "short description" ["short description" ...]]
+                   [-d "long description" ["long description" ...]] [-u url]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i, --interactive     Run script in interactive mode
+  -o filename, --output filename
+                        Output file (default is slack-desc
+  -V, --version         show program's version number and exit
+
+commandline mode:
+  -n name, --name name  Program name (single word)
+  -s "short description" ["short description" ...], --short "short description" ["short description" ...]
+                        Program short description (one line)
+  -d "long description" ["long description" ...], --description "long description" ["long description" ...]
+                        Program description
+  -u url, --url url     Program homepage URL
 
 Script will generate slack-desc file in your current working directory.
+```

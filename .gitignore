@@ -1,3 +1,4 @@
 .vscode*
 tmp*
 slack-desc
+__pycache__*

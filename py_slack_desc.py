@@ -1,3 +1,4 @@
+"""pyslackdesc - simple script to generate Slackware's slack-desc files."""
 import argparse
 import os
 import sys
@@ -5,38 +6,49 @@ import textwrap
 
 
 def arguments():
-    """Parses arguments
-    
+    """Parse arguments.
+
     Returns
     -------
     argparse.Namespace
         Returns Argparse Namespace
-    """
 
-    parser = argparse.ArgumentParser()
+    """
+    parser = argparse.ArgumentParser(prog='pyslackdesc')
 
     parser.add_argument("-i", "--interactive", default=False,
                         help="Run script in interactive mode",
                         action="store_true")
     parser.add_argument("-o", "--output", default='slack-desc',
+                        metavar='filename',
                         help="Output file (default is slack-desc")
-    # Add group                         
+    parser.add_argument("-V", "--version", action='version',
+                        version='%(prog)s 0.2')
+
+    # Add group
     cmd_parser = parser.add_argument_group('commandline mode')
-    cmd_parser.add_argument("-n", "--name", nargs=1, 
-                        help="Program name (single word)")
+    cmd_parser.add_argument("-n", "--name", nargs=1,
+                            metavar='name', type=str,
+                            help="Program name (single word)")
     cmd_parser.add_argument("-s", "--short", nargs='+',
+                            metavar='"short description"', type=str,
                             help="Program short description (one line)")
     cmd_parser.add_argument("-d", "--description", nargs='+',
+                            metavar='"long description"',
                             help="Program description")
-    cmd_parser.add_argument("-u", "--url", nargs=1,
+    cmd_parser.add_argument("-u", "--url", nargs=1, metavar='url',
                             help="Program homepage URL")
     args = parser.parse_args()
+
+    print(f"{args.output}, {args.name}, {args.short}, \
+          {args.description}, {args.url}")
+
     return args
 
 
-def text_warpper(text, prefix, separator):
-    """Wraps text
-   
+def text_wrapper(text, prefix, separator=''):
+    """Wrap text.
+
     Parameters:
     ----------
     text : {str}
@@ -44,25 +56,25 @@ def text_warpper(text, prefix, separator):
     prefix : {str}
         Defines a name of the program to be used as a prefix
         for every line of text
-    separator : {str}
+    separator : {str}, optional
         Defines the text inserted between prefix and text
-    
+
     Returns
     -------
     list
         Returns a list of strings (lines)
-    """
 
+    """
     pkg_prefix = prefix + separator
     # empty lines need a special care
     if text != '':
         max_line_width = (79 - len(pkg_prefix))
-        text_warpper = textwrap.TextWrapper(
+        text_wrapper = textwrap.TextWrapper(
             width=max_line_width,
             initial_indent=pkg_prefix,
             subsequent_indent=pkg_prefix)
         warped_text = textwrap.dedent(text)
-        warped_text = text_warpper.wrap(warped_text)
+        warped_text = text_wrapper.wrap(warped_text)
         return warped_text
     else:
         # single line doesn't need trailing spaces
@@ -73,8 +85,8 @@ def text_warpper(text, prefix, separator):
 
 def text_validator(text, one_word=False, one_line=False,
                    six_lines=False, pkg_name=None):
-    """Validates the text that makes up the slack-desc file
-    
+    """Validate the text that makes up the slack-desc file.
+
     Parameters:
     ----------
     text : {str}
@@ -89,17 +101,18 @@ def text_validator(text, one_word=False, one_line=False,
         (the default is False)
     pkg_name : {str}, optional
         Defines name of program (the default is None)
+
     Raises
     ------
     ValueError
         Raisers ValueError if text doesn't pass validation
-    
+
     Returns
     -------
     bool
         True if text passes validation. Otherwise raises an error.
-    """
 
+    """
     if not text:
         raise ValueError("Error: Input can't be empty. Try again.")
     elif one_word:
@@ -116,7 +129,7 @@ def text_validator(text, one_word=False, one_line=False,
     elif six_lines:
         if not pkg_name:
             sys.exit("Error: Unknown program name.")
-        elif len(text_warpper(text, pkg_name, ': ')) > 6:
+        elif len(text_wrapper(text, pkg_name, ': ')) > 6:
             raise ValueError(
                 "Error: Package description is too long. Try again.")
     else:
@@ -125,8 +138,8 @@ def text_validator(text, one_word=False, one_line=False,
 
 def user_input(question, one_word=False, one_line=False,
                six_lines=False, pkg_name=None):
-    """Asks user for input and pass it to validator
-    
+    """Asks user for input and pass it to validator.
+
     Parameters:
     ----------
     question : {str}
@@ -143,13 +156,13 @@ def user_input(question, one_word=False, one_line=False,
     pkg_name : {str}, optional
         Passed to the validator, defines name of a program
         (the default is None)
-    
+
     Returns
     -------
     str
         Returns correct user input
-    """
 
+    """
     var_name = input(question)
 
     try:
@@ -162,14 +175,14 @@ def user_input(question, one_word=False, one_line=False,
 
 
 def header():
-    """Header of slack-build file
-    
+    """Header of slack-build file.
+
     Returns
     -------
     list
         Returns a list of lines
-    """
 
+    """
     header = [
         '# HOW TO EDIT THIS FILE:',
         '# The "handy ruler" below makes it easier to edit a package'
@@ -185,7 +198,7 @@ def header():
 
 
 def handy_ruler(pkg_name):
-    """Creates a handy ruler
+    """Create a handy ruler.
 
     Parameters:
     ----------
@@ -196,8 +209,8 @@ def handy_ruler(pkg_name):
     -------
     list
         Returns single element list with 'handy ruler'
-    """
 
+    """
     ruler_intend = len(pkg_name) * ' '
     ruler_start = '|-----handy-ruler'  # 17 chars
     ruler_extender = (79 - len(ruler_intend + ruler_start) - 1) * '-'
@@ -209,7 +222,7 @@ def handy_ruler(pkg_name):
 
 
 def path_validator(path, override=False):
-    """Validates file path. Asks if file exist
+    """Validate file path. Asks if file exist.
 
     Parameters:
     ----------
@@ -218,13 +231,13 @@ def path_validator(path, override=False):
     override : {bool}, optional
         If true output file will be overridded without asking.
         (the default is False, which mean ask about overridding)
-    
+
     Returns
     -------
     str
         Returns correct absolute path
-    """
 
+    """
     # Validating path
     file_path = os.path.expandvars(path)
     file_path = os.path.expanduser(file_path)
@@ -254,31 +267,28 @@ def path_validator(path, override=False):
 
 
 def write_file(text, file_path):
-    """Writes text to file
-    
+    """Write text to file.
+
     Parameters:
     ----------
     text : {str}
         Text to be written
     file_path : {str}
         Path to output file
-    
+
     Returns
     -------
     bool
         Returns True if success
-    """
 
+    """
     with open(file_path, mode='a') as f:
         f.write(text + '\n')
         return True
 
 
 def main():
-    """Main function
-    
-    """
-
+    """Execute program."""
     args = arguments()
 
     # Gathering information and storing in dictionary
@@ -299,38 +309,41 @@ def main():
                                     pkg_name=program['name'])
     else:
         # cli mode: to override!
-        try:
-            path = path_validator(args.output, override=True)
-            # Validate and set name
-            text_validator(' '.join(args.name))
-            program['name'] = ' '.join(args.name)
-            # Validate and set short description
-            text_validator(' '.join(args.short), pkg_name=program['name'])
-            program['short_desc'] = ' '.join(args.short)
-            # Validate and set long description
-            text_validator(' '.join(args.description), six_lines=True,
-                           pkg_name=program['name'])
-            program['desc'] = ' '.join(args.description)
-            # Validate and set URL
-            text_validator(' '.join(args.url), one_word=True, one_line=True,
-                           pkg_name=program['name'])
-            program['url'] = ' '.join(args.url)
-        except ValueError as error:
-            print(error)
-    # common part
-    program['header'] = header()
-    program['ruler'] = handy_ruler(program['name'])
-    program['empty'] = ''
+        if args.name and args.short and args.description and args.url:
+            try:
+                path = path_validator(args.output, override=True)
+                # Validate and set name
+                text_validator(' '.join(args.name))
+                program['name'] = ' '.join(args.name)
+                # Validate and set short description
+                text_validator(' '.join(args.short), pkg_name=program['name'])
+                program['short_desc'] = ' '.join(args.short)
+                # Validate and set long description
+                text_validator(' '.join(args.description), six_lines=True,
+                               pkg_name=program['name'])
+                program['desc'] = ' '.join(args.description)
+                # Validate and set URL
+                text_validator(' '.join(args.url), one_word=True,
+                               one_line=True, pkg_name=program['name'])
+                program['url'] = ' '.join(args.url)
+            except ValueError as error:
+                print(error)
+        else:
+            sys.exit('Missing argument(s). Use --help for help.')
+        # common part
+        program['header'] = header()
+        program['ruler'] = handy_ruler(program['name'])
+        program['empty'] = ''
 
     # warping some values
     for key in ('short_desc', 'desc', 'url', 'empty'):
-        program[key] = text_warpper(program[key], program['name'], ': ')
+        program[key] = text_wrapper(program[key], program['name'], ': ')
 
     # there is 6 lines for 'desc' insert missing lines
     if len(program['desc']) < 6:
         for _ in range(6 - len(program['desc'])):
             program['desc'].extend(program['empty'])
-    
+
     # writting file
     for key in ('header', 'ruler', 'short_desc', 'empty',
                 'desc', 'empty', 'url', 'empty'):

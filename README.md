@@ -1,6 +1,6 @@
 # pyslackdesc
 
-## Simple script to generate [Slackware](http://www.slackware.com)'s [Slack-desc](https://www.slackwiki.com/Slack-desc) files. Useful if you write [SlackBuilds](https://www.slackwiki.com/Writing_A_SlackBuild_Script)
+## Simple script to generate [Slackware](http://www.slackware.com)'s [slack-desc](https://www.slackwiki.com/Slack-desc) files. Useful if you write [SlackBuilds](https://www.slackwiki.com/Writing_A_SlackBuild_Script)
 
 ### Usage
 

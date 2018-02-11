@@ -14,7 +14,11 @@ def arguments():
         Returns Argparse Namespace
 
     """
-    parser = argparse.ArgumentParser(prog='pyslackdesc')
+    parser = argparse.ArgumentParser(prog='pyslackdesc',
+                                     description="pyslackdesc - simple, \
+                                     interactive script to generate \
+                                     Slack-desc files",
+                                     epilog="Have fun!")
 
     parser.add_argument("-i", "--interactive", default=False,
                         help="Run script in interactive mode",

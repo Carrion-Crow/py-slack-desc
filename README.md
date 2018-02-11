@@ -1,6 +1,6 @@
 # pyslackdesc
 
-## pyslackdesc - simple, interactive script to generate [Slackware](http://www.slackware.com)'s [Slack-desc](https://www.slackwiki.com/Slack-desc) files. Useful if you write [SlackBuilds](https://www.slackwiki.com/Writing_A_SlackBuild_Script)
+## Simple script to generate [Slackware](http://www.slackware.com)'s [Slack-desc](https://www.slackwiki.com/Slack-desc) files. Useful if you write [SlackBuilds](https://www.slackwiki.com/Writing_A_SlackBuild_Script)
 
 ### Usage
 
@@ -22,5 +22,3 @@
     -d "long description" ["long description" ...], --description "long description" ["long description" ...]
                             Program description
     -u url, --url url     Program homepage URL
-
-    Script will generate slack-desc file in your current working directory.

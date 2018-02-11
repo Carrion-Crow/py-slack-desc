@@ -44,9 +44,6 @@ def arguments():
                             help="Program homepage URL")
     args = parser.parse_args()
 
-    print(f"{args.output}, {args.name}, {args.short}, \
-          {args.description}, {args.url}")
-
     return args
 
 
@@ -335,9 +332,9 @@ def main():
         else:
             sys.exit('Missing argument(s). Use --help for help.')
         # common part
-        program['header'] = header()
-        program['ruler'] = handy_ruler(program['name'])
-        program['empty'] = ''
+    program['header'] = header()
+    program['ruler'] = handy_ruler(program['name'])
+    program['empty'] = ''
 
     # warping some values
     for key in ('short_desc', 'desc', 'url', 'empty'):

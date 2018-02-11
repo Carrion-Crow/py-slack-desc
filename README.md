@@ -4,25 +4,23 @@
 
 ### Usage
 
-```python
-usage: pyslackdesc [-h] [-i] [-o filename] [-V] [-n name]
-                   [-s "short description" ["short description" ...]]
-                   [-d "long description" ["long description" ...]] [-u url]
+    usage: pyslackdesc [-h] [-i] [-o filename] [-V] [-n name]
+                    [-s "short description" ["short description" ...]]
+                    [-d "long description" ["long description" ...]] [-u url]
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -i, --interactive     Run script in interactive mode
-  -o filename, --output filename
-                        Output file (default is slack-desc
-  -V, --version         show program's version number and exit
+    optional arguments:
+    -h, --help            show this help message and exit
+    -i, --interactive     Run script in interactive mode
+    -o filename, --output filename
+                            Output file (default is slack-desc
+    -V, --version         show program's version number and exit
 
-commandline mode:
-  -n name, --name name  Program name (single word)
-  -s "short description" ["short description" ...], --short "short description" ["short description" ...]
-                        Program short description (one line)
-  -d "long description" ["long description" ...], --description "long description" ["long description" ...]
-                        Program description
-  -u url, --url url     Program homepage URL
+    commandline mode:
+    -n name, --name name  Program name (single word)
+    -s "short description" ["short description" ...], --short "short description" ["short description" ...]
+                            Program short description (one line)
+    -d "long description" ["long description" ...], --description "long description" ["long description" ...]
+                            Program description
+    -u url, --url url     Program homepage URL
 
-Script will generate slack-desc file in your current working directory.
-```
+    Script will generate slack-desc file in your current working directory.

@@ -21,11 +21,13 @@ def arguments():
                                      epilog="Have fun!")
 
     parser.add_argument("-i", "--interactive", default=False,
-                        help="Run script in interactive mode",
+                        help="run script in interactive mode",
                         action="store_true")
     parser.add_argument("-o", "--output", default='slack-desc',
                         metavar='filename',
-                        help="Output file (default is slack-desc")
+                        help="output file (default is slack-desc)")
+    parser.add_argument("-v", "--verbose", help="show generated file",
+                        action="store_true", default=False)
     parser.add_argument("-V", "--version", action='version',
                         version='%(prog)s 0.2')
 
@@ -33,19 +35,16 @@ def arguments():
     cmd_parser = parser.add_argument_group('commandline mode')
     cmd_parser.add_argument("-n", "--name", nargs=1,
                             metavar='name', type=str,
-                            help="Program name (single word)")
+                            help="program name (single word)")
     cmd_parser.add_argument("-s", "--short", nargs='+',
                             metavar='"short description"', type=str,
-                            help="Program short description (one line)")
+                            help="program short description (one line)")
     cmd_parser.add_argument("-d", "--description", nargs='+',
                             metavar='"long description"',
-                            help="Program description")
+                            help="program long description (up to 6 lines)")
     cmd_parser.add_argument("-u", "--url", nargs=1, metavar='url',
-                            help="Program homepage URL")
+                            help="program URL")
     args = parser.parse_args()
-
-    print(f"{args.output}, {args.name}, {args.short}, \
-          {args.description}, {args.url}")
 
     return args
 
@@ -126,13 +125,13 @@ def text_validator(text, one_word=False, one_line=False,
             raise ValueError("Error: Text is too long. Try again.")
     elif one_line:
         if not pkg_name:
-            sys.exit("Error: unknown program name.")
+            raise ValueError("Error: unknown program name.")
         elif (len(pkg_name) + len(text) + 2) > 79:
             raise ValueError(
                 "Error: Package short description is too long. Try again.")
     elif six_lines:
         if not pkg_name:
-            sys.exit("Error: Unknown program name.")
+            raise ValueError("Error: Unknown program name.")
         elif len(text_wrapper(text, pkg_name, ': ')) > 6:
             raise ValueError(
                 "Error: Package description is too long. Try again.")
@@ -335,9 +334,9 @@ def main():
         else:
             sys.exit('Missing argument(s). Use --help for help.')
         # common part
-        program['header'] = header()
-        program['ruler'] = handy_ruler(program['name'])
-        program['empty'] = ''
+    program['header'] = header()
+    program['ruler'] = handy_ruler(program['name'])
+    program['empty'] = ''
 
     # warping some values
     for key in ('short_desc', 'desc', 'url', 'empty'):
@@ -353,6 +352,11 @@ def main():
                 'desc', 'empty', 'url', 'empty'):
         for text in program[key]:
             write_file(text, path)
+
+    # verbose option
+    if args.verbose:
+        with open(path, mode="r") as f:
+            print(f.read(), end='')
 
 
 if __name__ == '__main__':

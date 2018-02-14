@@ -4,21 +4,25 @@
 
 ### Usage
 
-    usage: pyslackdesc [-h] [-i] [-o filename] [-V] [-n name]
+    usage: pyslackdesc [-h] [-i] [-o filename] [-v] [-V] [-n name]
                     [-s "short description" ["short description" ...]]
                     [-d "long description" ["long description" ...]] [-u url]
 
+    pyslackdesc - simple, interactive script to generate Slack-desc files
+
     optional arguments:
     -h, --help            show this help message and exit
-    -i, --interactive     Run script in interactive mode
+    -i, --interactive     run script in interactive mode
     -o filename, --output filename
-                            Output file (default is slack-desc
+                            output file (default is slack-desc)
+    -v, --verbose         show generated file
     -V, --version         show program's version number and exit
-
     commandline mode:
-    -n name, --name name  Program name (single word)
-    -s "short description" ["short description" ...], --short "short description" ["short description" ...]
-                            Program short description (one line)
-    -d "long description" ["long description" ...], --description "long description" ["long description" ...]
-                            Program description
-    -u url, --url url     Program homepage URL
+    -n name, --name name  program name (single word)
+    -s "short description" ["short description" ...], --short "short description"
+    ["short description" ...]
+                            program short description (one line)
+    -d "long description" ["long description" ...], --description "long description"
+    ["long description" ...]
+                            program long description (up to 6 lines)
+    -u url, --url url     program URL

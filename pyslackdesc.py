@@ -26,6 +26,8 @@ def arguments():
     parser.add_argument("-o", "--output", default='slack-desc',
                         metavar='filename',
                         help="Output file (default is slack-desc")
+    parser.add_argument("-v", "--verbose", help="Show generated file",
+                        action="store_true", default=False)
     parser.add_argument("-V", "--version", action='version',
                         version='%(prog)s 0.2')
 
@@ -350,6 +352,11 @@ def main():
                 'desc', 'empty', 'url', 'empty'):
         for text in program[key]:
             write_file(text, path)
+
+    # verbose option
+    if args.verbose:
+        with open(path, mode="r") as f:
+            print(f.read(), end='')
 
 
 if __name__ == '__main__':

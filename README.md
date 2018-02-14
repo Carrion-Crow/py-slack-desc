@@ -12,7 +12,8 @@
     -h, --help            show this help message and exit
     -i, --interactive     Run script in interactive mode
     -o filename, --output filename
-                            Output file (default is slack-desc
+                            Output file (default is slack-desc)
+    -v, --verbose         Show generated file
     -V, --version         show program's version number and exit
 
     commandline mode:

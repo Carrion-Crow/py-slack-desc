@@ -25,7 +25,7 @@ def arguments():
                         action="store_true")
     parser.add_argument("-o", "--output", default='slack-desc',
                         metavar='filename',
-                        help="Output file (default is slack-desc")
+                        help="Output file (default is slack-desc)")
     parser.add_argument("-v", "--verbose", help="Show generated file",
                         action="store_true", default=False)
     parser.add_argument("-V", "--version", action='version',

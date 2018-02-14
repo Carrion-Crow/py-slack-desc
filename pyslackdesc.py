@@ -21,12 +21,12 @@ def arguments():
                                      epilog="Have fun!")
 
     parser.add_argument("-i", "--interactive", default=False,
-                        help="Run script in interactive mode",
+                        help="run script in interactive mode",
                         action="store_true")
     parser.add_argument("-o", "--output", default='slack-desc',
                         metavar='filename',
-                        help="Output file (default is slack-desc)")
-    parser.add_argument("-v", "--verbose", help="Show generated file",
+                        help="output file (default is slack-desc)")
+    parser.add_argument("-v", "--verbose", help="show generated file",
                         action="store_true", default=False)
     parser.add_argument("-V", "--version", action='version',
                         version='%(prog)s 0.2')
@@ -35,15 +35,15 @@ def arguments():
     cmd_parser = parser.add_argument_group('commandline mode')
     cmd_parser.add_argument("-n", "--name", nargs=1,
                             metavar='name', type=str,
-                            help="Program name (single word)")
+                            help="program name (single word)")
     cmd_parser.add_argument("-s", "--short", nargs='+',
                             metavar='"short description"', type=str,
-                            help="Program short description (one line)")
+                            help="program short description (one line)")
     cmd_parser.add_argument("-d", "--description", nargs='+',
                             metavar='"long description"',
-                            help="Program description")
+                            help="program long description (up to 6 lines)")
     cmd_parser.add_argument("-u", "--url", nargs=1, metavar='url',
-                            help="Program homepage URL")
+                            help="program URL")
     args = parser.parse_args()
 
     return args

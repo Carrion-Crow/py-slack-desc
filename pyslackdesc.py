@@ -125,13 +125,13 @@ def text_validator(text, one_word=False, one_line=False,
             raise ValueError("Error: Text is too long. Try again.")
     elif one_line:
         if not pkg_name:
-            sys.exit("Error: unknown program name.")
+            raise ValueError("Error: unknown program name.")
         elif (len(pkg_name) + len(text) + 2) > 79:
             raise ValueError(
                 "Error: Package short description is too long. Try again.")
     elif six_lines:
         if not pkg_name:
-            sys.exit("Error: Unknown program name.")
+            raise ValueError("Error: Unknown program name.")
         elif len(text_wrapper(text, pkg_name, ': ')) > 6:
             raise ValueError(
                 "Error: Package description is too long. Try again.")

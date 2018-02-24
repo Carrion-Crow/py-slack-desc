@@ -26,3 +26,24 @@
     ["long description" ...]
                             program long description (up to 6 lines)
     -u url, --url url     program URL
+
+### Sample
+
+    pyslackdesc-runner.py -v -n pyslackdesc -s "pyslackdesc - simple script to generate slack-desc files" -d "Simple script to generate Slackware's slack-desc files. Useful if you write SlackBuilds." -u https://github.com/Carrion-Crow/pyslackdesc
+    Content of /home/crow/dev/pyslackdesc/slack-desc:
+
+    # HOW TO EDIT THIS FILE:# The "handy ruler" below makes it easier to edit a package description.  Line
+    # up the first '|' above the ':' following the base package name, and the '|'
+    # on the right side marks the last column you can put a character in.  You must# make exactly 11 lines for the formatting to be correct.  It's also
+    # customary to leave one space after the ':'.
+            |-----handy-ruler--------------------------------------------------|
+    pyslackdesc: pyslackdesc - simple script to generate slack-desc filespyslackdesc:
+    pyslackdesc: Simple script to generate Slackware's slack-desc files. Useful if
+    pyslackdesc: you write SlackBuilds.
+    pyslackdesc:
+    pyslackdesc:
+    pyslackdesc:
+    pyslackdesc:
+    pyslackdesc:
+    pyslackdesc: https://github.com/Carrion-Crow/pyslackdesc
+    pyslackdesc:

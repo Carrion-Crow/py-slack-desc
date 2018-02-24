@@ -3,6 +3,7 @@ import argparse
 import os
 import sys
 import textwrap
+from ._version import __version__
 
 
 def arguments():
@@ -29,7 +30,8 @@ def arguments():
     parser.add_argument("-v", "--verbose", help="show generated file",
                         action="store_true", default=False)
     parser.add_argument("-V", "--version", action='version',
-                        version='%(prog)s 0.2')
+                        version='%(prog)s '
+                        '{version}'.format(version=__version__))
 
     # Add group
     cmd_parser = parser.add_argument_group('commandline mode')

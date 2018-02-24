@@ -7,10 +7,12 @@ import textwrap
 
 def arguments():
     """Parse arguments.
+
     Returns
     -------
     argparse.Namespace
-        Returns Argparse Namespace
+        Returns Argparse Namespace.
+
     """
     parser = argparse.ArgumentParser(prog='pyslackdesc',
                                      description="pyslackdesc - simple, \
@@ -49,6 +51,7 @@ def arguments():
 
 def text_wrapper(text, prefix, separator=''):
     """Wrap text.
+
     Parameters:
     ----------
     text : {str}
@@ -61,7 +64,8 @@ def text_wrapper(text, prefix, separator=''):
     Returns
     -------
     list
-        Returns a list of strings (lines)
+        Returns a list of strings (lines).
+
     """
     pkg_prefix = prefix + separator
     # empty lines need a special care
@@ -84,6 +88,7 @@ def text_wrapper(text, prefix, separator=''):
 def text_validator(text, one_word=False, one_line=False,
                    six_lines=False, pkg_name=None):
     """Validate the text that makes up the slack-desc file.
+
     Parameters:
     ----------
     text : {str}
@@ -101,11 +106,12 @@ def text_validator(text, one_word=False, one_line=False,
     Raises
     ------
     ValueError
-        Raisers ValueError if text doesn't pass validation
+        Raisers ValueError if text doesn't pass validation.
     Returns
     -------
     bool
         True if text passes validation. Otherwise raises an error.
+
     """
     if not text:
         raise ValueError("Error: Input can't be empty. Try again.")
@@ -133,6 +139,7 @@ def text_validator(text, one_word=False, one_line=False,
 def user_input(question, one_word=False, one_line=False,
                six_lines=False, pkg_name=None):
     """Asks user for input and pass it to validator.
+
     Parameters:
     ----------
     question : {str}
@@ -152,7 +159,8 @@ def user_input(question, one_word=False, one_line=False,
     Returns
     -------
     str
-        Returns correct user input
+        Returns correct user input.
+
     """
     var_name = input(question)
 
@@ -167,10 +175,12 @@ def user_input(question, one_word=False, one_line=False,
 
 def header():
     """Header of slack-build file.
+
     Returns
     -------
     list
-        Returns a list of lines
+        Returns a list of lines.
+
     """
     header = [
         '# HOW TO EDIT THIS FILE:',
@@ -188,6 +198,7 @@ def header():
 
 def handy_ruler(pkg_name):
     """Create a handy ruler.
+
     Parameters:
     ----------
     pkg_name : {str}
@@ -195,7 +206,8 @@ def handy_ruler(pkg_name):
     Returns
     -------
     list
-        Returns single element list with 'handy ruler'
+        Returns single element list with 'handy ruler'.
+
     """
     ruler_intend = len(pkg_name) * ' '
     ruler_start = '|-----handy-ruler'  # 17 chars
@@ -209,6 +221,7 @@ def handy_ruler(pkg_name):
 
 def path_validator(path, override=False):
     """Validate file path. Asks if file exist.
+
     Parameters:
     ----------
     path : {str}
@@ -219,7 +232,8 @@ def path_validator(path, override=False):
     Returns
     -------
     str
-        Returns correct absolute path
+        Returns correct absolute path.
+
     """
     # Validating path
     file_path = os.path.expandvars(path)
@@ -251,6 +265,7 @@ def path_validator(path, override=False):
 
 def write_file(text, file_path):
     """Write text to file.
+
     Parameters:
     ----------
     text : {str}
@@ -260,7 +275,8 @@ def write_file(text, file_path):
     Returns
     -------
     bool
-        Returns True if success
+        Returns True if success.
+
     """
     with open(file_path, mode='a') as f:
         f.write(text + '\n')

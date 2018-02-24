@@ -72,9 +72,8 @@ def text_wrapper(text, prefix, separator=''):
     pkg_prefix = prefix + separator
     # empty lines need a special care
     if text != '':
-        max_line_width = (79 - len(pkg_prefix))
         text_wrapper = textwrap.TextWrapper(
-            width=max_line_width,
+            width=79,
             initial_indent=pkg_prefix,
             subsequent_indent=pkg_prefix)
         warped_text = textwrap.dedent(text)

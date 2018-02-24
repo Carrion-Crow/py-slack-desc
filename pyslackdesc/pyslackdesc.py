@@ -49,7 +49,7 @@ def main():
                 print(error)
         else:
             sys.exit('Missing argument(s). Use --help for help.')
-        # common part
+    # common part
     program['header'] = header()
     program['ruler'] = handy_ruler(program['name'])
     program['empty'] = ''
@@ -58,7 +58,7 @@ def main():
     for key in ('short_desc', 'desc', 'url', 'empty'):
         program[key] = text_wrapper(program[key], program['name'], ': ')
 
-    # there is 6 lines for 'desc' insert missing lines
+    # there is 6 lines for a 'desc' insert missing lines
     if len(program['desc']) < 6:
         for _ in range(6 - len(program['desc'])):
             program['desc'].extend(program['empty'])
@@ -73,7 +73,3 @@ def main():
     if args.verbose:
         with open(path, mode="r") as f:
             print(f.read(), end='')
-
-
-# if __name__ == '__main__':
-#     main()

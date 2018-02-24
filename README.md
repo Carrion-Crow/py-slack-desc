@@ -29,7 +29,10 @@
 
 ### Sample
 
+commandline mode:
+
     pyslackdesc-runner.py -v -n pyslackdesc -s "pyslackdesc - simple script to generate slack-desc files" -d "Simple script to generate Slackware's slack-desc files. Useful if you write SlackBuilds." -u https://github.com/Carrion-Crow/pyslackdesc
+    
     Content of /home/crow/dev/pyslackdesc/slack-desc:
 
     # HOW TO EDIT THIS FILE:# The "handy ruler" below makes it easier to edit a package description.  Line
@@ -47,3 +50,7 @@
     pyslackdesc:
     pyslackdesc: https://github.com/Carrion-Crow/pyslackdesc
     pyslackdesc:
+
+interactive mode:
+
+    pyslackdesc-runner.py -v -i

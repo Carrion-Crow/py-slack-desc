@@ -71,5 +71,6 @@ def main():
 
     # verbose option
     if args.verbose:
+        print('\nContent of {}:\n'.format(path))
         with open(path, mode="r") as f:
             print(f.read(), end='')
